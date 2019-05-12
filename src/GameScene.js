@@ -3,14 +3,15 @@ import { Scene } from 'phaser'
 class GameScene extends Scene {
 
   preload() {
-    this.load.image('mntScene', 'assets/mountainScene.png');
-    this.load.image('pltfrm1', 'assets/platform1.png');
-    this.load.image('runes', 'assets/eyeRune.png');
-    this.load.image('ninjaStar', 'assets/trueNinjaStar.png');
+    this.load.image('mntScene', 'assets/mountainScene.png')
+    this.load.image('pltfrm1', 'assets/platform1.png')
+    this.load.image('runes', 'assets/eyeRune.png')
+    this.load.image('ninjaStar', 'assets/trueNinjaStar.png')
     this.load.spritesheet('ninja',
         'assets/maleBase/full/ninja_full.png',
         { frameWidth: 32, frameHeight: 64 }
       )
+
     }
 
   create() {
@@ -31,10 +32,10 @@ class GameScene extends Scene {
   }
 
   createPlayer() {
-    this.player = this.physics.add.sprite(300, 200, 'ninja');
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.platforms);
+    this.player = this.physics.add.sprite(300, 200, 'ninja')
+    this.player.setBounce(0.2)
+    this.player.setCollideWorldBounds(true)
+    this.physics.add.collider(this.player, this.platforms)
 
     this.anims.create({
       key: 'left',
@@ -58,24 +59,25 @@ class GameScene extends Scene {
   }
 
   createCursor() {
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.createCursorKeys()
   }
 
   update() {
-        if (this.cursors.left.isDown){
-        this.player.setVelocityX(-160);
-        this.player.anims.play('left', true);
-      } else if (this.cursors.right.isDown){
-        this.player.setVelocityX(160);
-        this.player.anims.play('right', true);
+        if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-160)
+        this.player.anims.play('left', true)
+      } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(160)
+        this.player.anims.play('right', true)
       } else {
-        this.player.setVelocityX(0);
-        this.player.anims.play('turn');
+        this.player.setVelocityX(0)
+        this.player.anims.play('turn')
       }
 
     if (this.cursors.up.isDown && this.player.body.touching.down) {
-        this.player.setVelocityY(-330);
+        this.player.setVelocityY(-330)
     }
+
   }
 }
 
