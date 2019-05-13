@@ -33,7 +33,11 @@ class GameScene extends Scene {
     this.createNinjaStar()
 
     this.scoreText = this.add.text(16, 16, 'score: 0',
-    { fontSize: '32px', fill: '#000' });
+    { fontSize: '32px', fill: '#000' })
+    this.gameOverText = this.add.text(400, 200, 'GAMEOVER',
+    { fontSize: '64px', fill: '#000' })
+    this.gameOverText.setOrigin(0.5)
+    this.gameOverText.visible = false
 
   }
 
@@ -125,6 +129,8 @@ class GameScene extends Scene {
     player.setTint(0xff0000);
     player.anims.play('turn');
     this.gameOver = true;
+    this.gameOverText.visible = true
+    //shows game over text
   }
 
 
