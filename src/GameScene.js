@@ -1,7 +1,14 @@
 import { Scene } from 'phaser'
 
 class GameScene extends Scene {
+  constructor(){
+    super()
 
+    this.score = 0
+    this.gameOver = false
+  }
+//==============================================
+//preload
   preload() {
     this.load.image('mntScene', 'assets/mountainScene.png')
     this.load.image('pltfrm1', 'assets/platform1.png')
@@ -13,7 +20,8 @@ class GameScene extends Scene {
       )
 
     }
-
+//=================================================
+//create
   create() {
     const mntScene = this.add.image(0, 0, 'mntScene')
     mntScene.setOrigin(0, 0)
@@ -21,14 +29,24 @@ class GameScene extends Scene {
     this.createPlatforms()
     this.createPlayer()
     this.createCursor()
+    this.createRunes()
+    this.createNinjaStar()
+
+    this.scoreText = this.add.text(16, 16, 'score: 0',
+    { fontSize: '32px', fill: '#000' });
+
   }
 
   createPlatforms() {
    this.platforms = this.physics.add.staticGroup()
-   this.platforms.create(400, 500, 'pltfrm1').setScale(3).refreshBody()
-   this.platforms.create(600, 400, 'pltfrm1')
-   this.platforms.create(50, 250, 'pltfrm1')
-   this.platforms.create(700, 220, 'pltfrm1')
+   //Primary bottom platform
+   this.platforms.create(400, 500, 'pltfrm1').setScale(4).refreshBody()
+
+   this.platforms.create(500, 350, 'pltfrm1')
+   this.platforms.create(300, 240, 'pltfrm1')
+   this.platforms.create(720, 240, 'pltfrm1')
+   this.platforms.create(100, 350, 'pltfrm1')
+   this.platforms.create(475, 150, 'pltfrm1')
   }
 
   createPlayer() {
@@ -59,9 +77,61 @@ class GameScene extends Scene {
   }
 
   createCursor() {
-    this.cursors = this.input.keyboard.createCursorKeys()
+    this.cursors = this.input.keyboard.createCursorKeys();
   }
 
+  createRunes() {
+    this.runes = this.physics.add.group({
+      key: 'runes',
+      repeat: 11,
+      setXY: { x: 12, y: 0, stepX: 70 }
+    });
+
+  this.runes.children.iterate((child) =>  {
+      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
+
+  this.physics.add.collider(this.runes, this.platforms);
+  this.physics.add.overlap(this.player, this.runes, this.collectRunes, null, this);
+
+}
+
+ collectRunes(player, runes) {
+   runes.disableBody(true, true);
+   this.score += 10;
+   this.scoreText.setText('Score: ' + this.score);
+
+   if (this.runes.countActive(true) === 0) {
+     this.runes.children.iterate((child) => {
+       child.enableBody(true, child.x, 0, true, true);
+      });
+
+       const x = (this.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+       const theEnemyStar = this.ninjaStar.create(x, 16, 'ninjaStar');
+       theEnemyStar.setBounce(1);
+       theEnemyStar.setCollideWorldBounds(true);
+       theEnemyStar.setVelocity(Phaser.Math.Between(-200, 200), 20);
+   }
+}
+
+  createNinjaStar() {
+    this.ninjaStar = this.physics.add.group();
+    this.physics.add.collider(this.ninjaStar, this.platforms);
+    this.physics.add.collider(this.player, this.ninjaStar, this.hitNinjaStar, null, this);
+  }
+
+  hitNinjaStar(player, ninjaStar) {
+    this.physics.pause();
+    player.setTint(0xff0000);
+    player.anims.play('turn');
+    this.gameOver = true;
+  }
+
+
+
+
+  //=====================================================
+//update
   update() {
         if (this.cursors.left.isDown) {
         this.player.setVelocityX(-160)
