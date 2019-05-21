@@ -1,4 +1,4 @@
-import { Scene } from 'phaser'
+/*import { Scene } from 'phaser'
 
 class PreloadScene extends Scene {
   constructor() {
@@ -18,4 +18,4 @@ class PreloadScene extends Scene {
   }
 }
 
-export default PreloadScene
+export default PreloadScene*/
